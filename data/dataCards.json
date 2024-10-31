@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "background": "/images/dwarf.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 2,
+    "background": "/images/dwarf.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 3,
+    "background": "/images/elf.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 4,
+    "background": "/images/elf.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 5,
+    "background": "/images/orcish-ai-nextjs-framework.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 6,
+    "background": "/images/orcish-ai-nextjs-framework.webp",
+    "isFlipped": false
+  },
+  {
+    "id": 7,
+     "background":"/images/orcishcity.webp",
+     "isFlipped":false
+  },
+  {
+    "id":8,
+     "background":"/images/orcishcity.webp",
+     "isFlipped":false
+  },
+  {
+    "id":9,
+     "background":"/images/orcishlogo.webp",
+     "isFlipped":false
+  },
+  {
+    "id":10,
+     "background":"/images/orcishlogo.webp",
+     "isFlipped":false
+  },
+  {
+    "id":11,
+     "background":"/images/orcishmage.webp",
+     "isFlipped":false
+  },
+  {
+    "id":12,
+     "background":"/images/orcishmage.webp",
+     "isFlipped":false
+  }
+]
