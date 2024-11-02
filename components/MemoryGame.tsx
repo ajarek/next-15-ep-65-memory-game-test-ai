@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import cards from '@/data/dataCards.json'
-import { log } from 'console'
+import { GameHeader } from '@/components/MemoryGame-header'
 interface Card {
   id: number
   background: string
@@ -13,22 +13,28 @@ const MemoryGame = () => {
   const [nowCards, setNowCards] = useState<Card[]>([])
   const [selectCards, setSelectCards] = useState<Card[]>([])
   const [hidden, setHidden] = useState<number[]>([])
+  const [newGame, setNewGame] = useState<boolean>(false)
 
   useEffect(() => {
     const shuffled = shuffleCards(cards)
     setNowCards(shuffled)
   }, [])
+
+  useEffect(() => {
+    if (hidden.length === 12) { 
+      setNewGame(true) // Zmieniono na true, aby rozpocząć nową grę
+      setHidden([])
+    }
+  }, [hidden])
+
   useEffect(() => {
     if (selectCards.length === 2) {
-      const [firstCard, secondCard] = selectCards;
+      const [firstCard, secondCard] = selectCards
       if (firstCard?.background === secondCard?.background) {
-        setHidden(prevHidden => [...prevHidden, firstCard.id, secondCard.id]);
+        setHidden((prevHidden) => [...prevHidden, firstCard.id, secondCard.id])
       }
     }
   }, [selectCards])
-
-
-
 
   const shuffleCards = (cards: Card[]) => {
     const shuffled = [...cards]
@@ -39,55 +45,57 @@ const MemoryGame = () => {
     return shuffled
   }
 
-  const handleCart=(id:number)=>{
-   
-    if(selectCards.length>=2){
+  const handleCart = (id: number) => {
+    if (selectCards.length >= 2) {
       return
     }
-    
-    const newCards=nowCards.map((card:Card)=>{
-      if(card.id===id){
+
+    const newCards = nowCards.map((card: Card) => {
+      if (card.id === id) {
         setSelectCards([...selectCards, card])
-        return{
+        return {
           ...card,
-          isFlipped:!card.isFlipped
+          isFlipped: !card.isFlipped,
         }
       }
       return card
-
     })
     setNowCards(newCards)
     setTimeout(() => {
       setSelectCards([])
-      setNowCards(nowCards.map(card => ({...card, isFlipped: false})))
+      setNowCards(nowCards.map((card) => ({ ...card, isFlipped: false })))
     }, 5000)
   }
- 
+
   return (
-    <div className='grid grid-cols-4 gap-4'>
-      {nowCards.map((card: Card) => (
-        
-        <div
-          key={card.id}
-          className='w-32 h-32 border-2 rounded-lg overflow-hidden'
-          onClick={() => handleCart(card.id)}
-          hidden={hidden.includes(card.id)}
-        >
-          <div className='relative w-full h-full'>
-            {card.isFlipped ? (
-              <Image
-               src={card.background}
-               alt='card'
-               fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-               className='object-cover '
-             />
-            ) : (
-              <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50'></div>
-            )}
-          </div>
+    <div>
+      <GameHeader handleNewGame={() => setNewGame(true)} />
+      {newGame && (
+        <div className='grid grid-cols-4 gap-4'>
+          {nowCards.map((card: Card) => (
+            <div
+              key={card.id}
+              className='w-32 h-32 border-2 rounded-lg overflow-hidden'
+              onClick={() => handleCart(card.id)}
+              hidden={hidden.includes(card.id)}
+            >
+              <div className='relative w-full h-full'>
+                {card.isFlipped ? (
+                  <Image
+                    src={card.background}
+                    alt='card'
+                    fill
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                    className='object-cover '
+                  />
+                ) : (
+                  <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50'></div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   )
 }
