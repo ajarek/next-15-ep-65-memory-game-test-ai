@@ -19,6 +19,7 @@ const MemoryGame = () => {
   const [newGame, setNewGame] = useState<boolean>(false)
   const [seconds, setSeconds] = useState(0) 
   const [isActive, setIsActive] = useState(false) 
+  const [isLocked, setIsLocked] = useState(false) 
 
   useEffect(() => {
     const shuffled = shuffleCards(cards)
@@ -26,12 +27,13 @@ const MemoryGame = () => {
   }, [])
 
   useEffect(() => {
-    if (hidden.length === 12) {
+    if (hidden.length == 24) {
       setNewGame(true) 
-      setHidden([])
       setIsActive(false)
+      setNowCards(nowCards.map(card => ({...card, isFlipped: false})))
+      setHidden([])
     }
-  }, [hidden])
+  }, [hidden, nowCards])
 
   useEffect(() => {
     if (selectCards.length === 2) {
@@ -63,8 +65,8 @@ const MemoryGame = () => {
     return shuffled
   }
 
-  const handleCart = (id: number) => {
-    if (selectCards.length >= 2) {
+    const handleCart = (id: number) => {
+    if (selectCards.length >= 2 || nowCards.find(card => card.id === id)?.isFlipped) { // Sprawdzenie, czy karta jest już otwarta
       return
     }
 
@@ -73,16 +75,31 @@ const MemoryGame = () => {
         setSelectCards([...selectCards, card])
         return {
           ...card,
-          isFlipped: !card.isFlipped,
+          isFlipped: true, // Ustawienie karty jako odwróconej
         }
       }
       return card
     })
     setNowCards(newCards)
-    setTimeout(() => {
-      setSelectCards([])
-      setNowCards(nowCards.map((card) => ({ ...card, isFlipped: false })))
-    }, 3000)
+
+    if (selectCards.length === 1) { // Jeśli otwieramy drugą kartę
+      setIsLocked(true) // Zablokowanie możliwości klikania
+      setTimeout(() => {
+        const [firstCard] = selectCards
+        if (firstCard.background !== newCards.find(card => card.id === id)?.background) {
+          // Jeśli karty się nie zgadzają, odwróć je z powrotem
+          setNowCards(nowCards.map((card) => ({
+            ...card,
+            isFlipped: false,
+          })))
+        } else {
+          // Jeśli karty się zgadzają, dodaj je do ukrytych
+          setHidden((prevHidden) => [...prevHidden, firstCard.id, id])
+        }
+        setSelectCards([]) // Resetowanie wybranych kart
+        setIsLocked(false) // Odblokowanie kart
+      }, 2000)
+    }
   }
 
   const toggle = () => {
@@ -93,7 +110,7 @@ const MemoryGame = () => {
     setSeconds(0)
     setIsActive(false)
   }
-
+console.log(hidden)
   return (
     <div>
       <div className='text-center mb-4'>
