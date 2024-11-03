@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import cards from '@/data/dataCards.json'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, RotateCcw, Timer } from 'lucide-react'
+import { Sparkles, RotateCcw, Timer, TimerReset } from 'lucide-react'
 import { Button } from './ui/button'
 
 interface Card {
@@ -137,12 +137,15 @@ console.log(hidden)
             <RotateCcw className='w-4 h-4 mr-2' />
             {isActive ? 'Stop' : 'Start'}
           </Button>
-          <Button onClick={reset}>Reset</Button>
+          <Button onClick={reset}>
+          <TimerReset />
+            Reset
+            </Button>
         </div>
       </div>
 
       {newGame && (
-        <div className='grid grid-cols-4 gap-4'>
+        <div className='grid grid-cols-4 max-lg:grid-cols-3 max-sm:grid-cols-2 gap-4'>
           {nowCards.map((card: Card) => (
             <div
               key={card.id}
