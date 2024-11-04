@@ -17,9 +17,9 @@ const MemoryGame = () => {
   const [selectCards, setSelectCards] = useState<Card[]>([])
   const [hidden, setHidden] = useState<number[]>([])
   const [newGame, setNewGame] = useState<boolean>(false)
-  const [seconds, setSeconds] = useState(0) 
-  const [isActive, setIsActive] = useState(false) 
-  const [isLocked, setIsLocked] = useState(false) 
+  const [seconds, setSeconds] = useState(0)
+  const [isActive, setIsActive] = useState(false)
+  const [isLocked, setIsLocked] = useState(false)
 
   useEffect(() => {
     const shuffled = shuffleCards(cards)
@@ -28,9 +28,9 @@ const MemoryGame = () => {
 
   useEffect(() => {
     if (hidden.length == 24) {
-      setNewGame(true) 
+      setNewGame(true)
       setIsActive(false)
-      setNowCards(nowCards.map(card => ({...card, isFlipped: false})))
+      setNowCards(nowCards.map((card) => ({ ...card, isFlipped: false })))
       setHidden([])
     }
   }, [hidden, nowCards])
@@ -65,8 +65,11 @@ const MemoryGame = () => {
     return shuffled
   }
 
-    const handleCart = (id: number) => {
-    if (selectCards.length >= 2 || nowCards.find(card => card.id === id)?.isFlipped) { // Sprawdzenie, czy karta jest już otwarta
+  const handleCart = (id: number) => {
+    if (
+      selectCards.length >= 2 ||
+      nowCards.find((card) => card.id === id)?.isFlipped
+    ) {
       return
     }
 
@@ -75,29 +78,32 @@ const MemoryGame = () => {
         setSelectCards([...selectCards, card])
         return {
           ...card,
-          isFlipped: true, // Ustawienie karty jako odwróconej
+          isFlipped: true,
         }
       }
       return card
     })
     setNowCards(newCards)
 
-    if (selectCards.length === 1) { // Jeśli otwieramy drugą kartę
-      setIsLocked(true) // Zablokowanie możliwości klikania
+    if (selectCards.length === 1) {
+      setIsLocked(true)
       setTimeout(() => {
         const [firstCard] = selectCards
-        if (firstCard.background !== newCards.find(card => card.id === id)?.background) {
-          // Jeśli karty się nie zgadzają, odwróć je z powrotem
-          setNowCards(nowCards.map((card) => ({
-            ...card,
-            isFlipped: false,
-          })))
+        if (
+          firstCard.background !==
+          newCards.find((card) => card.id === id)?.background
+        ) {
+          setNowCards(
+            nowCards.map((card) => ({
+              ...card,
+              isFlipped: false,
+            }))
+          )
         } else {
-          // Jeśli karty się zgadzają, dodaj je do ukrytych
           setHidden((prevHidden) => [...prevHidden, firstCard.id, id])
         }
-        setSelectCards([]) // Resetowanie wybranych kart
-        setIsLocked(false) // Odblokowanie kart
+        setSelectCards([])
+        setIsLocked(false)
       }, 2000)
     }
   }
@@ -110,9 +116,9 @@ const MemoryGame = () => {
     setSeconds(0)
     setIsActive(false)
   }
-console.log(hidden)
+  console.log(hidden)
   return (
-    <div>
+    <div className='max-sm:w-full min-h-screen  px-24 max-sm:px-8'>
       <div className='text-center mb-4'>
         <h1 className='text-4xl text-yellow-500 font-bold mb-4 flex items-center justify-center gap-2'>
           <Sparkles className='' />
@@ -138,21 +144,20 @@ console.log(hidden)
             {isActive ? 'Stop' : 'Start'}
           </Button>
           <Button onClick={reset}>
-          <TimerReset />
+            <TimerReset />
             Reset
-            </Button>
+          </Button>
         </div>
       </div>
 
       {newGame && (
-        <div className='grid grid-cols-4 max-lg:grid-cols-3 max-sm:grid-cols-2 gap-4'>
+        <div className='grid grid-cols-4 max-lg:grid-cols-3 max-sm:grid-cols-2 gap-4 place-items-center'>
           {nowCards.map((card: Card) => (
             <div
               key={card.id}
               className='w-32 h-32 border-2 rounded-lg overflow-hidden cursor-pointer'
               onClick={() => handleCart(card.id)}
               hidden={hidden.includes(card.id)}
-             
             >
               <div className='relative w-full h-full'>
                 {card.isFlipped ? (
@@ -165,13 +170,13 @@ console.log(hidden)
                   />
                 ) : (
                   <div className='absolute top-0 left-0 w-full h-full  '>
-                     <Image
-                    src='/images/orc-connector.png'
-                    alt='card'
-                    fill
-                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                    className='object-cover bg-amber-400 '
-                  />
+                    <Image
+                      src='/images/orc-connector.png'
+                      alt='card'
+                      fill
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                      className='object-cover bg-amber-400 '
+                    />
                   </div>
                 )}
               </div>
